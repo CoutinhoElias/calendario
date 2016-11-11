@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="SIAV" />
+	<meta name="author" content="" />
+
+	<title>SIAV {% if avaluo.FolioK %} {{avaluo.FolioK}} {%endif%} {% if conteo_eventos_usuario > 0 %} ({{conteo_eventos_usuario}}) {% endif %}</title>
+
+	<link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}images/favicon.ico"/>
+	<link rel="stylesheet" href="{{ STATIC_URL }}/JS/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/font-icons/entypo/css/entypo.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/bootstrap.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-core.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-theme.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-forms.css">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/custom.css">
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery-2.1.3.min.js"></script>
+	<style>@import "{{ STATIC_URL }}CSS/sweet-alert.css";@import "{{ STATIC_URL }}CSS/Style.css";</style>
+	<script>$.noConflict();</script>
+	{% block style %}
+	{% endblock %}
+</head>
+<body class="page-body  page-fade">
+
+<div id="main-page-container" class="page-container sidebar-collapsed"><!-- add class "sidebar-collapsed" to close sidebar by default, "chat-visible" to make chat appear always -->
+	
+	<div class="sidebar-menu">
+
+		<div class="sidebar-menu-inner">
+			
+			<header class="logo-env">
+
+				<!-- logo -->
+				<div class="logo">
+					<a href="/SIAV/">
+						<img src="{{ STATIC_URL }}/CSS/images/SIAV_logo.png" width="120" alt="" />
+						<span class="badge badge-secondary">{{en_proceso}}</span>
+					</a>
+				</div>
+
+				<!-- logo collapse icon -->
+				<div class="sidebar-collapse">
+					<a href="#" class="sidebar-collapse-icon"><!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
+						<i class="entypo-menu"></i>
+					</a>
+				</div>
+
+								
+				<!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
+				<div class="sidebar-mobile-menu visible-xs">
+					<a href="#" class="with-animation"><!-- add class "with-animation" to support animation -->
+						<i class="entypo-menu"></i>
+					</a>
+				</div>
+
+			</header>
+			
+									
+			<ul id="main-menu" class="main-menu">
+				<li class="{% block alta %}{% endblock %}">
+					<a href="/SIAV/alta_avaluo">
+						<i class="glyphicon glyphicon-chevron-down"></i>
+						<span class="title">Alta</span>
+					</a>
+				</li>						
+				</li>
+
+				<li class="{% block visita %}{% endblock %}">
+					<a href="/SIAV/visita">
+						<i class="glyphicon glyphicon-camera"></i>
+						<span class="title">Visita</span>
+						<span class="badge badge-secondary">{{por_visitar}}</span>
+					</a>
+				</li>
+				<li class="{% block captura %}{% endblock %}">
+					<a href="/SIAV/captura">
+						<i class="glyphicon glyphicon-home"></i>
+						<span class="title">Captura</span>
+						<span class="badge badge-secondary">{{por_capturar}}</span>
+					</a>
+				</li>
+				<li class="{% block salida %}{% endblock %}">
+					<a href="/SIAV/salida">
+						<i class="entypo-check"></i>
+						<span class="title">Salida</span>
+						<span class="badge badge-secondary">{{por_salida}}</span>
+					</a>
+				</li>
+				<li class="{% block consulta %}{% endblock %}">
+					<a href="/SIAV/consulta_master">
+						<i class="entypo-search"></i>
+						<span class="title">Consulta</span>
+					</a>
+				</li>
+				<li class="{% block calendario %}{% endblock %}">
+					<a href="/SIAV/calendario">
+						<i class="entypo-calendar"></i>
+						<span class="title">Calendario</span>
+					</a>
+				</li>
+				{% if user.is_staff %}
+				<li class="{% block facturar %}{% endblock %}">
+					<a href="/SIAV/facturar">
+						<i class="glyphicon glyphicon-list-alt"></i>
+						<span class="title">Facturar</span>
+					</a>
+				</li>
+				<li class="{% block liquidar %}{% endblock %}">
+					<a href="/SIAV/liquidar">
+						<i class="glyphicon glyphicon-usd"></i>
+						<span class="title">Liquidar</span>
+					</a>
+				</li>
+				{% endif %}
+
+				
+				<li class="{% block recibo %}{% endblock %}">
+					<a href="/SIAV/recibo">
+						<i class="glyphicon glyphicon-plus-sign"></i>
+						<span class="title">Recibo</span>
+					</a>
+				</li>
+				{% if user.is_staff %}
+				<li class="{% block estadistico %}{% endblock %}">
+					<a href="/SIAV/estadistico/{%now "Y"%}/{%now "m"%}">
+						<i class="entypo-chart-bar"></i>
+						<span class="title">Estadístico</span>
+					</a>
+				</li>
+				{% endif %}
+		</ul>
+			
+		</div>
+
+	</div>
+
+	<div class="main-content">
+				
+		<div class="row">
+		
+			<!-- Profile Info and Notifications -->
+			<div class="col-md-6 col-sm-8 clearfix">
+		
+				<ul class="user-info pull-left pull-none-xsm">
+		
+					<!-- Profile Info -->
+					<li class="profile-info dropdown"><!-- add class "pull-right" if you want to place this from right -->
+		
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						{% if user.userprofile.picture %}
+							<img src="{{user.userprofile.picture.url}}" alt="" class="img-circle" width="44" />		
+						{% else %}
+							<img src="{{ STATIC_URL }}CSS/images/logo.png" alt="" class="" width="44" />
+						{% endif %}
+							{{user.first_name}} {{user.last_name}}
+						</a>
+
+					</li>
+		
+				</ul>  
+				
+				<ul class="user-info pull-left pull-right-xs pull-none-xsm">
+		
+					<!-- Raw Notifications -->
+					<li id="notif_btn" class="notifications dropdown">
+		
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+							<i id="notif_link" class="entypo-globe"></i>
+							{% if conteo_eventos_usuario > 0 %} 
+							<span class="badge badge-danger">{{conteo_eventos_usuario}}</span>
+							{%endif%}
+						</a>
+					<ul id="notif_dd" class="dropdown-menu">
+					</ul>
+					</li>
+
+					<li id="toler_btn" class="notifications dropdown">
+		
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+							<i id="toler_link" class="entypo-clock"></i>
+						</a>
+					<ul id="toler_dd" class="dropdown-menu">
+					</ul>
+
+					</li>
+					<li id="proc_btn" class="notifications dropdown">
+		
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+							<i id="proc_link" class="entypo-eye"></i>
+						</a>
+					<ul id="proc_dd" class="dropdown-menu">
+					</ul>
+
+					</li>		
+				</ul>
+		
+			</div>
+		
+		
+			<!-- Raw Links -->
+			<div class="col-md-6 col-sm-4 clearfix hidden-xs">
+		
+				<ul class="list-inline links-list pull-right">
+		
+
+		
+					<li class="sep"></li>
+					<li>
+						<a href="/SIAV/docs" >
+							<i class="entypo-help"  data-toggle="tooltip" class="btn btn-white tooltip-secondary" data-placement="bottom" title="" data-original-title="Si necesitas ayuda haz click aqui."></i>
+						</a>
+					</li>
+					<li class="sep"></li>
+					<li>
+						<a href="#" data-toggle="chat" data-collapse-sidebar="1">
+							<i class="entypo-chat"></i>
+							Chat
+							<span class="badge badge-success chat-notifications-badge is-hidden">0</span>
+						</a>
+					</li>
+		
+					<li class="sep"></li>
+           <li>
+                <a onclick="printDiv('printableArea')" href="#"> <i class="glyphicon glyphicon-print"></i>
+                </a>
+            </li>
+            <li class="sep"></li>
+            {% if user.is_staff %}
+            <li>
+                <a href="/admin">Admin <i class="glyphicon glyphicon-wrench"></i>
+                </a>
+            </li>
+            {% endif %}		
+            <li class="sep"></li>
+					<li>
+						<a href="/accounts/logout">
+							Log Out <i class="entypo-logout right"></i>
+						</a>
+					</li>
+				</ul>
+		
+			</div>
+		
+		</div>
+		
+		<hr />
+
+		{% for message in messages %}
+		    <div class="alert alert-{{ message.tags }}">
+		        <button type='button' class='close' data-dismiss='alert'>&times;</button>
+		        {{ message }}</div>
+		{% endfor %}
+
+		
+{% block content %}
+
+
+
+{% endblock %}
+		
+		<!-- Footer -->
+		<footer class="main">
+			
+			&copy; 2015 <strong>SIAV 3.0</strong> by <a href="http://alluxi.mx" target="_blank">Alluxi</a>
+		
+		</footer>
+	</div>
+
+	
+	<div id="chat" class="fixed" data-current-user="{{user.first_name}} {{user.last_name}}" data-order-by-status="1" data-max-chat-history="25">
+	
+		<div class="chat-inner">
+	
+	
+			<h2 class="chat-header">
+				<a href="#" class="chat-close"><i class="entypo-cancel"></i></a>
+	
+				<i class="entypo-users"></i>
+				Chat
+				<span class="badge badge-success is-hidden">0</span>
+			</h2>
+	
+	
+			<div class="chat-group" id="group-1">
+				<strong>Favoritos</strong>
+				{% for u in users %}
+				<a href="#" id="{{u.id}}" data-conversation-history="#{{u.id}}-hist" class="chat_user user_{{u.id}}">
+					<span class="user-status is-offline user_{{u.id}}"></span> 
+						<em>{{u.first_name}} {{u.last_name}}</em>
+					</a>
+				{% endfor %}
+			</div>
+	
+		</div>
+
+	
+		<!-- conversation template -->
+		<div class="chat-conversation">
+	
+			<div class="conversation-header">
+				<a href="#" class="conversation-close"><i class="entypo-cancel"></i></a>
+	
+<!-- 				<span class="user-status is-offline user_{{u.id}}"></span>
+ -->				<span class="display-name"></span>
+<!-- 				<small></small> -->
+			</div>
+	
+			<ul class="conversation-body">
+			</ul>
+	
+			<div class="chat-textarea">
+				<textarea class="form-control autogrow" placeholder="Type your message"></textarea>
+			</div>
+	
+		</div>
+	
+	</div>
+	
+
+	
+	
+	<!-- Chat Histories -->
+
+  {% for key, values in comments_by_user.items %}
+    <ul class="chat-history" id="{{key}}-hist">
+        {% for val in values%}  
+        	<!-- val.3 - Boolean Leido , val.4  - Boolean Propio -->
+        	<li class="opponent {% if val.3 or val.4 %}read{%else%}unread{% endif %}">
+        	{% for v in val %}
+        		{%if forloop.counter = 1 %}
+        		<span class="user">{{v}}</span>
+        		{% elif forloop.counter = 2 %}
+        		<p>{{v}}</p>
+        		{% elif forloop.counter = 3 %}
+        		<span class="time">{{v}}</span>
+        		{%endif%}
+        	{% endfor %}
+        	</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+
+
+</div>
+
+	<!-- Imported styles on this page -->
+	<!-- Bottom scripts (common) -->
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/neon-custom.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/main-gsap.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery-ui-1.8.24.custom.min.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery-datepicker-es.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/bootstrap.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/joinable.js"></script> 
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/resizeable.js"></script> 
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}/JS/neon-api.js"></script>
+
+	<!-- Imported scripts on this page -->
+	<script src="{{ STATIC_URL }}/JS/toastr.js"></script>
+
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/sweet-alert.min.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/autoNumeric.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery.cookie.js"></script> 
+
+	{% if not debug %}
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/socket.io.js"></script>
+	<script  type="text/javascript">
+	// Conexión a Socket.io
+	var data = {{users_json|safe }};  
+	var current_user_id = {{user.id}};
+	var socket = io.connect('{{ request.META.HTTP_HOST }}:4000', { query: "user_id={{user.id}}&sessionid={{request.session.session_key}}" });
+	</script>
+	{% endif %}
+	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/index_scripts.js"></script>
+
+
+
+	<!-- JavaScripts initializations and stuff -->
+	<script src="{{ STATIC_URL }}/JS/neon-chat.js"></script>
+
+
+	{% block scripts %} {% endblock %}
+</body>
+	{% block footer %}
+	{% endblock %}
+
+
+</html>
