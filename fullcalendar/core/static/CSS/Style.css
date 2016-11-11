@@ -1,0 +1,26 @@
+@media print{
+    
+    @page {size: landscape}
+    header, footer {display:none;}
+    span.pseudolink {display:none;}
+
+    h1 {
+    font-style:italic;
+    font-size:large;
+    }
+
+    td{
+    font-size:xx-small;
+    padding: 0px 0px 0px 0px;
+    }
+
+    .filters {
+    display:none;
+    }
+
+    .tabla_opciones {
+    display:none;
+    
+    }
+
+}

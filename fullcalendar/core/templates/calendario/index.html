@@ -11,15 +11,15 @@
 	<title>SIAV {% if avaluo.FolioK %} {{avaluo.FolioK}} {%endif%} {% if conteo_eventos_usuario > 0 %} ({{conteo_eventos_usuario}}) {% endif %}</title>
 
 	<link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}images/favicon.ico"/>
-	<link rel="stylesheet" href="{{ STATIC_URL }}/JS/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/font-icons/entypo/css/entypo.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/bootstrap.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-core.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-theme.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/neon-forms.css">
-	<link rel="stylesheet" href="{{ STATIC_URL }}/CSS/custom.css">
-	<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery-2.1.3.min.js"></script>
-	<style>@import "{{ STATIC_URL }}CSS/sweet-alert.css";@import "{{ STATIC_URL }}CSS/Style.css";</style>
+	<link rel="stylesheet" href="/static/JS/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
+	<link rel="stylesheet" href="/static/CSS/font-icons/entypo/css/entypo.css">
+	<link rel="stylesheet" href="/static/CSS/bootstrap.css">
+	<link rel="stylesheet" href="/static/CSS/neon-core.css">
+	<link rel="stylesheet" href="/static/CSS/neon-theme.css">
+	<link rel="stylesheet" href="/static/CSS/neon-forms.css">
+	<link rel="stylesheet" href="/static/CSS/custom.css">
+	<script type="text/javascript" language="javascript" src="/static/JS/jquery-2.1.3.min.js"></script>
+	<style>@import "/static/CSS/sweet-alert.css";@import "/static/CSS/Style.css";</style>
 	<script>$.noConflict();</script>
 	{% block style %}
 	{% endblock %}
@@ -37,7 +37,7 @@
 				<!-- logo -->
 				<div class="logo">
 					<a href="/SIAV/">
-						<img src="{{ STATIC_URL }}/CSS/images/SIAV_logo.png" width="120" alt="" />
+						<img src="/static/CSS/images/SIAV_logo.png" width="120" alt="" />
 						<span class="badge badge-secondary">{{en_proceso}}</span>
 					</a>
 				</div>
@@ -327,15 +327,15 @@
 
   {% for key, values in comments_by_user.items %}
     <ul class="chat-history" id="{{key}}-hist">
-        {% for val in values%}  
+        {% for val in values%}
         	<!-- val.3 - Boolean Leido , val.4  - Boolean Propio -->
         	<li class="opponent {% if val.3 or val.4 %}read{%else%}unread{% endif %}">
         	{% for v in val %}
-        		{%if forloop.counter = 1 %}
+        		{%if forloop.counter == 1 %}
         		<span class="user">{{v}}</span>
-        		{% elif forloop.counter = 2 %}
+        		{% elif forloop.counter == 2 %}
         		<p>{{v}}</p>
-        		{% elif forloop.counter = 3 %}
+        		{% elif forloop.counter == 3 %}
         		<span class="time">{{v}}</span>
         		{%endif%}
         	{% endfor %}
